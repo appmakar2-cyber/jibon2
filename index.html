@@ -1,0 +1,1408 @@
+```html
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ফায়ারব্যাচ - ইয়ার্নিং অ্যাপ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SolaimanLipi', Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #fff;
+            min-height: 100vh;
+            padding-bottom: 70px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff8a00, #e52e71);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .user-phone {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .balance-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .balance-label {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .balance-amount {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4caf50;
+        }
+
+        /* Banner Styles */
+        .banner {
+            width: 100%;
+            height: 150px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .banner-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .banner:hover .banner-link {
+            opacity: 1;
+        }
+
+        .banner-link i {
+            font-size: 30px;
+            color: white;
+        }
+
+        /* Marquee Styles */
+        .marquee-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .marquee {
+            white-space: nowrap;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .marquee span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 15s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+
+        /* Buttons Grid */
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .action-button {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 5px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+        }
+
+        .action-button i {
+            font-size: 24px;
+        }
+
+        .action-button.fast {
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+        }
+
+        .action-button.tax {
+            background: linear-gradient(45deg, #2193b0, #6dd5ed);
+        }
+
+        .action-button.vip {
+            background: linear-gradient(45deg, #834d9b, #d04ed6);
+        }
+
+        .action-button.team {
+            background: linear-gradient(45deg, #00b09b, #96c93d);
+        }
+
+        .action-button.video {
+            background: linear-gradient(45deg, #ff5e62, #ff9966);
+        }
+
+        .action-button.recharge {
+            background: linear-gradient(45deg, #1d976c, #93f9b9);
+        }
+
+        .action-button.chain {
+            background: linear-gradient(45deg, #4b6cb7, #182848);
+        }
+
+        /* Navigation Bar */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #aaa;
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-item.active, .nav-item:hover {
+            color: #4caf50;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        /* Page Styles */
+        .page {
+            display: none;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 15px;
+            min-height: 70vh;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* VIP Packages */
+        .vip-packages {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .package-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .package-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .package-price {
+            font-size: 22px;
+            font-weight: bold;
+            color: #FFD700;
+            margin: 10px 0;
+        }
+
+        .package-details {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .buy-button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .buy-button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        /* Deposit Modal */
+        .deposit-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .form-group input, .form-group select {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+        }
+
+        .copy-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 5px;
+            font-size: 12px;
+            align-self: flex-start;
+        }
+
+        .submit-button {
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .cancel-button {
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #f44336, #e91e63);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* Profile Section */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff8a00, #e52e71);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+        }
+
+        .profile-details h2 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .profile-details p {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 3px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-card .value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4caf50;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .label {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .share-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .share-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .whatsapp { background: #25D366; }
+        .telegram { background: #0088cc; }
+        .facebook { background: #4267B2; }
+        .twitter { background: #1DA1F2; }
+
+        /* Video Player */
+        .video-player {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .video-container {
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 16/9;
+            background: black;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .video-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .control-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .skip-button {
+            background: #f44336;
+        }
+
+        .earn-button {
+            background: #4caf50;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid #4caf50;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Login Page */
+        .login-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .login-form {
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+        }
+
+        .login-input::placeholder {
+            color: #aaa;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .google-login {
+            background: linear-gradient(45deg, #4285F4, #34A853, #FBBC05, #EA4335);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 400px) {
+            .buttons-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .profile-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Page -->
+        <div id="loginPage" class="login-page">
+            <div class="login-header">
+                <h1>ফায়ারব্যাচ ইয়ার্নিং</h1>
+                <p>আপনার অ্যাকাউন্টে লগইন করুন</p>
+            </div>
+            <div class="login-form">
+                <input type="text" class="login-input" placeholder="ফোন নাম্বার বা ইমেইল" id="loginInput">
+                <button class="login-button" onclick="loginUser()">পরবর্তী</button>
+                <button class="login-button google-login" onclick="loginWithGoogle()">
+                    <i class="fab fa-google"></i> গুগল দিয়ে লগিন করুন
+                </button>
+                <div style="text-align: center; margin-top: 20px;">
+                    <p>অ্যাকাউন্ট নেই? <a href="#" onclick="showSignup()" style="color: #4caf50;">সাইন আপ করুন</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main App (Hidden by default) -->
+        <div id="mainApp" style="display: none;">
+            <!-- Header with User Info and Balance -->
+            <div class="header">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name" id="userName">মোহাম্মদ আলী</div>
+                        <div class="user-phone" id="userPhone">01712345678</div>
+                    </div>
+                </div>
+                <div class="balance-container">
+                    <div class="balance-label">ব্যালেন্স</div>
+                    <div class="balance-amount" id="userBalance">৳ 125.50</div>
+                </div>
+            </div>
+
+            <!-- Banner Section -->
+            <div class="banner">
+                <img src="https://placehold.co/500x150/1a2a6c/ffffff?text=ফায়ারব্যাচ+অ্যাড" alt="Promotional Banner" id="bannerImage">
+                <div class="banner-link" onclick="openBannerLink()">
+                    <i class="fas fa-external-link-alt"></i>
+                </div>
+            </div>
+
+            <!-- Marquee Message -->
+            <div class="marquee-container">
+                <div class="marquee">
+                    <span id="marqueeText">নতুন VIP প্যাকেজ লঞ্চ! এখনই কিনুন এবং প্রতিদিন ২% কমিশন পান! ★ প্রথম ১০০ ইউজার ১০% বোনাস! ★ নতুন ভিডিও অপশন চালু!</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons Grid -->
+            <div class="buttons-grid">
+                <button class="action-button fast" onclick="showPage('fastPage')">
+                    <i class="fas fa-bolt"></i>
+                    <span>ফাস্ট বাটন</span>
+                </button>
+                <button class="action-button tax" onclick="showPage('taxPage')">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>ট্যাক্স বাটন</span>
+                </button>
+                <button class="action-button vip" onclick="showPage('vipPage')">
+                    <i class="fas fa-crown"></i>
+                    <span>VIP প্যাকেজ</span>
+                </button>
+                <button class="action-button team" onclick="showPage('teamPage')">
+                    <i class="fas fa-users"></i>
+                    <span>টিম বাটন</span>
+                </button>
+                <button class="action-button video" onclick="openVideoPlayer()">
+                    <i class="fas fa-video"></i>
+                    <span>ওয়াজ ভিডিও</span>
+                </button>
+                <button class="action-button recharge" onclick="showPage('rechargePage')">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>মোবাইল রিচার্জ</span>
+                </button>
+                <button class="action-button chain" onclick="showPage('chainPage')">
+                    <i class="fas fa-sitemap"></i>
+                    <span>চেইন রেফার</span>
+                </button>
+            </div>
+
+            <!-- Fast Page -->
+            <div id="fastPage" class="page">
+                <div class="page-header">
+                    <button class="back-button" onclick="hidePage()"><i class="fas fa-arrow-left"></i></button>
+                    <h2 class="page-title">ফাস্ট বাটন</h2>
+                </div>
+                <div style="text-align: center; padding: 20px;">
+                    <h3>ফাস্ট অ্যাড দেখুন এবং আয় করুন</h3>
+                    <p style="margin: 20px 0; opacity: 0.9;">প্রতিবার অ্যাড দেখার জন্য ৬ পয়সা আয় করুন</p>
+                    <button class="submit-button" onclick="openAd()" style="width: 80%; margin: 0 auto;">অ্যাড দেখুন</button>
+                </div>
+            </div>
+
+            <!-- Tax Page -->
+            <div id="taxPage" class="page">
+                <div class="page-header">
+                    <button class="back-button" onclick="hidePage()"><i class="fas fa-arrow-left"></i></button>
+                    <h2 class="page-title">ট্যাক্স বাটন</h2>
+                </div>
+                <div style="text-align: center; padding: 20px;">
+                    <h3>ট্যাক্স অ্যাড দেখুন এবং আয় করুন</h3>
+                    <p style="margin: 20px 0; opacity: 0.9;">প্রতিবার অ্যাড দেখার জন্য ৬ পয়সা আয় করুন</p>
+                    <button class="submit-button" onclick="openAd()" style="width: 80%; margin: 0 auto;">অ্যাড দেখুন</button>
+                </div>
+            </div>
+
+            <!-- VIP Page -->
+            <div id="vipPage" class="page">
+                <div class="page-header">
+                    <button class="back-button" onclick="hidePage()"><i class="fas fa-arrow-left"></i></button>
+                    <h2 class="page-title">VIP প্যাকেজ</h2>
+                </div>
+                <div class="vip-packages" id="vipPackagesContainer">
+                    <!-- VIP packages will be loaded here from Firebase -->
+                </div>
+            </div>
+
+            <!-- Team Page -->
+            <div id="teamPage" class="page">
+                <div class="page-header">
+                    <button class="back-button" onclick="hidePage()"><i class="fas fa-arrow-left"></i></button>
+                    <h2 class="page-title">টিম বাটন</h2>
+                </div>
+                <div style="padding: 20px;">
+                    <h3>আপনার টিম ম্যানেজ করুন</h3>
+                    <p style="margin: 15px 0; opacity: 0.9;">একই অ্যাকাউন্ট ১২ জন ব্যবহার করতে পারবে</p>
+                    <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <h4>টিম সদস্য:</h4>
+                        <ul style="margin: 10px 0 10px 20px;" id="teamMembersList">
+                            <!-- Team members will be loaded here -->
+                        </ul>
+                        <p style="opacity: 0.8;">আপনার টিমে আরও <span id="remainingTeamSlots">8</span> জন সদস্য যোগ করা যাবে</p>
+                    </div>
+                    <button class="submit-button" style="width: 100%;">নতুন সদস্য যোগ করুন</button>
+                </div>
+            </div>
+
+            <!-- Recharge Page -->
+            <div id="rechargePage" class="page">
+                <div class="page-header">
+                    <button class="back-button" onclick="hidePage()"><i class="fas fa-arrow-left"></i></button>
+                    <h2 class="page-title">মোবাইল রিচার্জ</h2>
+                </div>
+                <div style="padding: 20px;">
+                    <h3>রিচার্জ করুন আপনার মোবাইল</h3>
+                    <p style="margin: 15px 0; opacity: 0.9;">শুধুমাত্র অ্যাড দেখে আয় করে রিচার্জ করুন</p>
+                    
+                    <div class="form-group">
+                        <label>অপারেটর</label>
+                        <select id="operatorSelect">
+                            <option>গ্রামীণফোন</option>
+                            <option>বাংলালিংক</option>
+                            <option>রবি</option>
+                            <option>এয়ারটেল</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>ফোন নাম্বার</label>
+                        <input type="text" class="login-input" placeholder="017XXXXXXXX" id="rechargeNumber">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>পরিমাণ (৳)</label>
+                        <input type="number" class="login-input" placeholder="10" id="rechargeAmount">
+                    </div>
+                    
+                    <button class="submit-button" style="width: 100%;" onclick="submitRecharge()">রিচার্জ করুন</button>
+                </div>
+            </div>
+
+            <!-- Chain Page -->
+            <div id="chainPage" class="page">
+                <div class="page-header">
+                    <button class="back-button" onclick="hidePage()"><i class="fas fa-arrow-left"></i></button>
+                    <h2 class="page-title">চেইন রেফার</h2>
+                </div>
+                <div style="padding: 20px;">
+                    <h3>আপনার রেফার চেইন</h3>
+                    <p style="margin: 15px 0; opacity: 0.9;">প্রতি জনের কাছ থেকে ২% কমিশন পান</p>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <h4>রেফার লিংক:</h4>
+                        <p style="word-break: break-all; margin: 10px 0;" id="referLink">https://firebatch.app/ref/user123</p>
+                        <button class="copy-button" onclick="copyToClipboard(document.getElementById('referLink').innerText)">কপি করুন</button>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <h4>রেফার সদস্য:</h4>
+                        <ul style="margin: 10px 0 10px 20px;" id="referMembersList">
+                            <!-- Refer members will be loaded here -->
+                        </ul>
+                        <p style="opacity: 0.8;">মোট কমিশন: ৳ <span id="totalCommission">42.30</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deposit Page -->
+            <div id="depositPage" class="page">
+                <div class="page-header">
+                    <button class="back-button" onclick="hidePage()"><i class="fas fa-arrow-left"></i></button>
+                    <h2 class="page-title">ডিপোজিট</h2>
+                </div>
+                <div class="deposit-form">
+                    <div class="form-group">
+                        <label>পেমেন্ট মেথড</label>
+                        <select id="paymentMethod">
+                            <option>নগদ</option>
+                            <option>বিকাশ</option>
+                            <option>রকেট</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>ফোন নাম্বার</label>
+                        <input type="text" class="login-input" placeholder="0189283838373" value="0189283838373" readonly>
+                        <button class="copy-button" onclick="copyToClipboard('0189283838373')">কপি করুন</button>
+                    </div>
+                    <div class="form-group">
+                        <label>টাকার পরিমান (৳)</label>
+                        <input type="number" class="login-input" placeholder="100" id="depositAmount">
+                    </div>
+                    <div class="form-group">
+                        <label>ট্রানজেকশন আইডি</label>
+                        <input type="text" class="login-input" placeholder="ট্রানজেকশন আইডি লিখুন" id="transactionId">
+                    </div>
+                    <button class="submit-button" onclick="submitDeposit()">সাবমিট করুন</button>
+                    <button class="cancel-button" onclick="hidePage()">বাতিল করুন</button>
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profilePage" class="page">
+                <div class="page-header">
+                    <button class="back-button" onclick="hidePage()"><i class="fas fa-arrow-left"></i></button>
+                    <h2 class="page-title">প্রোফাইল</h2>
+                </div>
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-details">
+                        <h2 id="profileName">মোহাম্মদ আলী</h2>
+                        <p>ইউজারনেম: <span id="profileUsername">user123</span></p>
+                        <p>ফোন: <span id="profilePhone">01712345678</span></p>
+                        <p>ইমেইল: <span id="profileEmail">user@example.com</span></p>
+                    </div>
+                </div>
+                
+                <div class="profile-stats">
+                    <div class="stat-card">
+                        <div class="value" id="profileBalance">৳ 125.50</div>
+                        <div class="label">বর্তমান ব্যালেন্স</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value" id="totalEarnings">৳ 2,450</div>
+                        <div class="label">মোট আয়</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value" id="referCount">156</div>
+                        <div class="label">রেফার করেছেন</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value" id="referCommission">৳ 42.30</div>
+                        <div class="label">রেফার কমিশন</div>
+                    </div>
+                </div>
+                
+                <div class="share-section">
+                    <h3>অ্যাপটি শেয়ার করুন</h3>
+                    <p>রেফার লিংক: <span id="shareReferLink">https://firebatch.app/ref/user123</span></p>
+                    <div class="share-buttons">
+                        <a href="#" class="share-button whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="#" class="share-button telegram">
+                            <i class="fab fa-telegram"></i>
+                        </a>
+                        <a href="#" class="share-button facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="share-button twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; text-align: center; font-size: 13px; opacity: 0.7;">
+                    <p>পলিসি | অ্যাপ ভার্সন: 1.2.5</p>
+                </div>
+            </div>
+
+            <!-- Withdraw Page -->
+            <div id="withdrawPage" class="page">
+                <div class="page-header">
+                    <button class="back-button" onclick="hidePage()"><i class="fas fa-arrow-left"></i></button>
+                    <h2 class="page-title">উইথড্রো</h2>
+                </div>
+                <div style="padding: 20px;">
+                    <h3>আপনার আয় উইথড্রো করুন</h3>
+                    <p style="margin: 15px 0; opacity: 0.9;">সর্বনিম্ন ২০০ টাকা উইথড্রো করতে পারবেন</p>
+                    
+                    <div class="form-group">
+                        <label>পেমেন্ট মেথড</label>
+                        <select id="withdrawMethod">
+                            <option>নগদ</option>
+                            <option>বিকাশ</option>
+                            <option>রকেট</option>
+                            <option>উপায়</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>ফোন নাম্বার</label>
+                        <input type="text" class="login-input" placeholder="017XXXXXXXX" id="withdrawNumber">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>পরিমাণ (৳)</label>
+                        <input type="number" class="login-input" placeholder="200" min="200" id="withdrawAmount">
+                    </div>
+                    
+                    <button class="submit-button" style="width: 100%;" onclick="submitWithdraw()">উইথড্রো করুন</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="showHomePage()">
+            <i class="fas fa-home"></i>
+            <span>হোম</span>
+        </div>
+        <div class="nav-item" onclick="showPage('depositPage')">
+            <i class="fas fa-wallet"></i>
+            <span>ডিপোজিট</span>
+        </div>
+        <div class="nav-item" onclick="showPage('profilePage')">
+            <i class="fas fa-user"></i>
+            <span>প্রোফাইল</span>
+        </div>
+        <div class="nav-item" onclick="openChat()">
+            <i class="fas fa-comments"></i>
+            <span>লাইভ চ্যাট</span>
+        </div>
+        <div class="nav-item" onclick="showPage('withdrawPage')">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>উইথড্রো</span>
+        </div>
+    </div>
+
+    <!-- Video Player -->
+    <div id="videoPlayer" class="video-player">
+        <div class="video-container">
+            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" 
+                title="YouTube video player" frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen id="videoFrame"></iframe>
+        </div>
+        <div class="video-controls">
+            <button class="control-button skip-button" onclick="closeVideoPlayer()">স্কিপ করুন</button>
+            <button class="control-button earn-button" onclick="earnVideoReward()">৬ পয়সা আয় করুন</button>
+        </div>
+    </div>
+
+    <!-- Loading Animation -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Firebase Configuration -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+        import { getDatabase, ref, onValue, set, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD3BGZ0MVLpbQbIpLUAnYvWNEIyk7Y6S0Q",
+            authDomain: "earning-app-80258.firebaseapp.com",
+            databaseURL: "https://earning-app-80258-default-rtdb.firebaseio.com",
+            projectId: "earning-app-80258",
+            storageBucket: "earning-app-80258.appspot.com",
+            messagingSenderId: "25930019210",
+            appId: "1:25930019210:web:3d254128ef85f66b631873",
+            measurementId: "G-4VSRKCH77X"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const database = getDatabase(app);
+        const auth = getAuth(app);
+        
+        console.log("Firebase initialized successfully");
+        
+        // Global variables
+        let currentUser = null;
+        
+        // Authentication functions
+        function loginUser() {
+            const email = document.getElementById('loginInput').value;
+            if (!email) {
+                alert('দয়া করে ইমেইল বা ফোন নাম্বার লিখুন');
+                return;
+            }
+            
+            // For demo purposes, we'll simulate login
+            simulateLogin();
+        }
+        
+        function loginWithGoogle() {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    currentUser = result.user;
+                    loadUserData();
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('mainApp').style.display = 'block';
+                })
+                .catch((error) => {
+                    console.error('Google login error:', error);
+                    alert('গুগল লগইনে সমস্যা হয়েছে');
+                });
+        }
+        
+        function simulateLogin() {
+            // Simulate successful login
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            loadUserData();
+        }
+        
+        function showSignup() {
+            alert('সাইন আপ ফিচার এখন ডেভেলপমেন্টে আছে। খুব শীঘ্রই লঞ্চ হবে!');
+        }
+        
+        // Load user data from Firebase
+        function loadUserData() {
+            // In a real app, this would fetch user data from Firebase
+            // For demo, we'll use sample data
+            
+            // Load VIP packages
+            loadVIPPackages();
+            
+            // Load banner
+            loadBanner();
+            
+            // Load marquee
+            loadMarquee();
+            
+            // Load team members
+            loadTeamMembers();
+            
+            // Load refer members
+            loadReferMembers();
+        }
+        
+        // Load VIP packages from Firebase
+        function loadVIPPackages() {
+            const vipRef = ref(database, 'vip_packages');
+            onValue(vipRef, (snapshot) => {
+                const data = snapshot.val();
+                const container = document.getElementById('vipPackagesContainer');
+                container.innerHTML = '';
+                
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        const pkg = data[key];
+                        const packageCard = document.createElement('div');
+                        packageCard.className = 'package-card';
+                        packageCard.innerHTML = `
+                            <h3>${pkg.name}</h3>
+                            <div class="package-price">৳ ${pkg.price}</div>
+                            <div class="package-details">${pkg.duration} দিনের জন্য<br>প্রতিদিন ${pkg.commission}% কমিশন</div>
+                            <button class="buy-button" onclick="buyPackage(${pkg.price}, '${key}')">বাই নাও</button>
+                        `;
+                        container.appendChild(packageCard);
+                    });
+                } else {
+                    container.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">কোন প্যাকেজ পাওয়া যায়নি</p>';
+                }
+            });
+        }
+        
+        // Load banner from Firebase
+        function loadBanner() {
+            const bannerRef = ref(database, 'banner');
+            onValue(bannerRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    document.getElementById('bannerImage').src = data.image_url || 'https://placehold.co/500x150/1a2a6c/ffffff?text=ফায়ারব্যাচ+অ্যাড';
+                    // Store banner link in data attribute for later use
+                    document.getElementById('bannerImage').dataset.link = data.link || '#';
+                }
+            });
+        }
+        
+        // Load marquee from Firebase
+        function loadMarquee() {
+            const marqueeRef = ref(database, 'marquee');
+            onValue(marqueeRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.text) {
+                    document.getElementById('marqueeText').innerText = data.text;
+                }
+            });
+        }
+        
+        // Load team members from Firebase
+        function loadTeamMembers() {
+            // In a real app, this would fetch team members from Firebase
+            const teamList = document.getElementById('teamMembersList');
+            teamList.innerHTML = `
+                <li>সদস্য ১: আহমেদ হোসেন</li>
+                <li>সদস্য ২: মেহেদী হাসান</li>
+                <li>সদস্য ৩: ফারহানা আক্তার</li>
+                <li>সদস্য ৪: সাইফুল ইসলাম</li>
+            `;
+            document.getElementById('remainingTeamSlots').innerText = '8';
+        }
+        
+        // Load refer members from Firebase
+        function loadReferMembers() {
+            // In a real app, this would fetch refer members from Firebase
+            const referList = document.getElementById('referMembersList');
+            referList.innerHTML = `
+                <li>সদস্য ১: আহমেদ হোসেন (২০ জন রেফার করেছেন)</li>
+                <li>সদস্য ২: মেহেদী হাসান (১৫ জন রেফার করেছেন)</li>
+                <li>সদস্য ৩: ফারহানা আক্তার (১২ জন রেফার করেছেন)</li>
+                <li>সদস্য ৪: সাইফুল ইসলাম (৮ জন রেফার করেছেন)</li>
+            `;
+            document.getElementById('totalCommission').innerText = '42.30';
+        }
+        
+        // Utility Functions
+        function showLoading() {
+            document.getElementById('loading').style.display = 'flex';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+        
+        // Page Navigation Functions
+        function showHomePage() {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // Show home content
+            document.querySelector('.buttons-grid').parentElement.style.display = 'block';
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.nav-item:nth-child(1)').classList.add('active');
+        }
+        
+        function showPage(pageId) {
+            // Hide home content
+            document.querySelector('.buttons-grid').parentElement.style.display = 'none';
+            
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // Show requested page
+            document.getElementById(pageId).style.display = 'block';
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        }
+        
+        function hidePage() {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // Show home content
+            document.querySelector('.buttons-grid').parentElement.style.display = 'block';
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.nav-item:nth-child(1)').classList.add('active');
+        }
+        
+        // Ad Functions
+        function openAd() {
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                alert('অ্যাড দেখার জন্য ধন্যবাদ! আপনার ব্যালেন্সে ৬ পয়সা যোগ হয়েছে।');
+                // In a real app, this would update the balance in Firebase
+            }, 2000);
+        }
+        
+        // Video Functions
+        function openVideoPlayer() {
+            // Load video from Firebase
+            const videoRef = ref(database, 'videos/main_video');
+            onValue(videoRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.url) {
+                    document.getElementById('videoFrame').src = data.url;
+                    document.getElementById('videoPlayer').style.display = 'flex';
+                } else {
+                    alert('ভিডিও পাওয়া যায়নি');
+                }
+            });
+        }
+        
+        function closeVideoPlayer() {
+            document.getElementById('videoPlayer').style.display = 'none';
+        }
+        
+        function earnVideoReward() {
+            closeVideoPlayer();
+            alert('ভিডিও দেখার জন্য ধন্যবাদ! আপনার ব্যালেন্সে ৬ পয়সা যোগ হয়েছে।');
+            // In a real app, this would update the balance in Firebase
+        }
+        
+        // VIP Functions
+        function buyPackage(amount, packageId) {
+            const balance = parseFloat(document.getElementById('userBalance').innerText.replace('৳ ', ''));
+            
+            if (balance >= amount) {
+                if (confirm(`আপনি কি ৳ ${amount} এর VIP প্যাকেজ কিনতে চান?`)) {
+                    // Save purchase to Firebase
+                    const purchaseRef = ref(database, 'user_purchases/' + currentUser?.uid || 'demo_user');
+                    const newPurchaseRef = push(purchaseRef);
+                    set(newPurchaseRef, {
+                        package_id: packageId,
+                        amount: amount,
+                        timestamp: new Date().toISOString(),
+                        status: 'pending'
+                    }).then(() => {
+                        alert(`৳ ${amount} এর VIP প্যাকেজ সফলভাবে ক্রয় করা হয়েছে! এডমিন এপ্রুভ করার পর প্যাকেজটি একটিভ হবে।`);
+                    }).catch((error) => {
+                        console.error('Purchase error:', error);
+                        alert('প্যাকেজ ক্রয়ে সমস্যা হয়েছে');
+                    });
+                }
+            } else {
+                if (confirm(`আপনার ব্যালেন্সে পর্যাপ্ত টাকা নেই। ডিপোজিট করতে চান?`)) {
+                    showPage('depositPage');
+                }
+            }
+        }
+        
+        // Deposit Functions
+        function submitDeposit() {
+            const amount = document.getElementById('depositAmount').value;
+            const method = document.getElementById('paymentMethod').value;
+            const transactionId = document.getElementById('transactionId').value;
+            
+            if (amount && amount > 0 && transactionId) {
+                // Save deposit request to Firebase
+                const depositRef = ref(database, 'deposit_requests/' + currentUser?.uid || 'demo_user');
+                const newDepositRef = push(depositRef);
+                set(newDepositRef, {
+                    amount: parseFloat(amount),
+                    method: method,
+                    transaction_id: transactionId,
+                    timestamp: new Date().toISOString(),
+                    status: 'pending'
+                }).then(() => {
+                    alert(`${amount} টাকার ডিপোজিট রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে। এডমিন যাচাই করার পর ব্যালেন্সে যোগ হবে।`);
+                    hidePage();
+                }).catch((error) => {
+                    console.error('Deposit error:', error);
+                    alert('ডিপোজিট রিকুয়েস্টে সমস্যা হয়েছে');
+                });
+            } else {
+                alert('দয়া করে সব তথ্য সঠিকভাবে লিখুন');
+            }
+        }
+        
+        // Recharge Functions
+        function submitRecharge() {
+            const number = document.getElementById('rechargeNumber').value;
+            const amount = document.getElementById('rechargeAmount').value;
+            const operator = document.getElementById('operatorSelect').value;
+            
+            if (number && amount && amount > 0) {
+                // Save recharge request to Firebase
+                const rechargeRef = ref(database, 'recharge_requests/' + currentUser?.uid || 'demo_user');
+                const newRechargeRef = push(rechargeRef);
+                set(newRechargeRef, {
+                    number: number,
+                    amount: parseFloat(amount),
+                    operator: operator,
+                    timestamp: new Date().toISOString(),
+                    status: 'pending'
+                }).then(() => {
+                    alert(`${amount} টাকার রিচার্জ রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে।`);
+                    hidePage();
+                }).catch((error) => {
+                    console.error('Recharge error:', error);
+                    alert('রিচার্জ রিকুয়েস্টে সমস্যা হয়েছে');
+                });
+            } else {
+                alert('দয়া করে সব তথ্য সঠিকভাবে লিখুন');
+            }
+        }
+        
+        // Withdraw Functions
+        function submitWithdraw() {
+            const number = document.getElementById('withdrawNumber').value;
+            const amount = document.getElementById('withdrawAmount').value;
+            const method = document.getElementById('withdrawMethod').value;
+            
+            if (number && amount && amount >= 200) {
+                // Save withdraw request to Firebase
+                const withdrawRef = ref(database, 'withdraw_requests/' + currentUser?.uid || 'demo_user');
+                const newWithdrawRef = push(withdrawRef);
+                set(newWithdrawRef, {
+                    number: number,
+                    amount: parseFloat(amount),
+                    method: method,
+                    timestamp: new Date().toISOString(),
+                    status: 'pending'
+                }).then(() => {
+                    alert(`${amount} টাকার উইথড্রো রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে।`);
+                    hidePage();
+                }).catch((error) => {
+                    console.error('Withdraw error:', error);
+                    alert('উইথড্রো রিকুয়েস্টে সমস্যা হয়েছে');
+                });
+            } else {
+                alert('দয়া করে সব তথ্য সঠিকভাবে লিখুন (সর্বনিম্ন ২০০ টাকা)');
+            }
+        }
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('কপি হয়ে গেছে!');
+            });
+        }
+        
+        // Banner link function
+        function openBannerLink() {
+            const link = document.getElementById('bannerImage').dataset.link || '#';
+            if (link !== '#') {
+                window.open(link, '_blank');
+            }
+        }
+        
+        // Chat Function
+        function openChat() {
+            alert('লাইভ চ্যাট ফিচার এখন ডেভেলপমেন্টে আছে। খুব শীঘ্রই লঞ্চ হবে!');
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.nav-item:nth-child(4)').classList.add('active');
+        }
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set active nav item
+            document.querySelector('.nav-item:nth-child(1)').classList.add('active');
+        });
+    </script>
+</body>
+</html>
+```
